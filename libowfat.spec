@@ -8,6 +8,7 @@ URL:		http://www.fefe.de/libowfat/
 Source0:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2
 Source1:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2.sig
 BuildRequires:	dietlibc-devel >= 0.20
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
 libowfat is a library of general purpose APIs extracted from Dan
