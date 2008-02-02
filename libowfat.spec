@@ -1,8 +1,8 @@
 Summary:	Reimplement libdjb under GPL
 Name:		libowfat
-Version:	0.24
+Version:	0.27
 Release:	%mkrel 1
-License:	GPL
+License:	GPLv2+
 Group:		Development/C
 URL:		http://www.fefe.de/libowfat/
 Source0:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2
