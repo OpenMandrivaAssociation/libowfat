@@ -1,14 +1,14 @@
 Summary:	Reimplement libdjb under GPL
 Name:		libowfat
 Version:	0.27
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPLv2+
 Group:		Development/C
 URL:		http://www.fefe.de/libowfat/
 Source0:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2
 Source1:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2.sig
-BuildRequires:	dietlibc-devel >= 0.20
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+BuildRequires:	dietlibc-devel >= 0.32
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 libowfat is a library of general purpose APIs extracted from Dan
@@ -42,7 +42,7 @@ has an online version of the bugtraq posting.
 %package -n	%{name}-devel
 Summary:	Static library and header files for the %{name} library
 Group:		Development/C
-Requires:	dietlibc-devel >= 0.20
+Requires:	dietlibc-devel >= 0.32
 
 %description -n	%{name}-devel
 libowfat is a library of general purpose APIs extracted from Dan
@@ -83,7 +83,7 @@ make -f GNUmakefile \
     DIET="%{_bindir}/diet -Os"
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 install -d %{buildroot}%{_libdir}/dietlibc
 
@@ -99,7 +99,7 @@ mv %{buildroot}%{_mandir}/man3/buffer.3 \
     %{buildroot}%{_mandir}/man3/buffer-libowfat.3
 
 %clean
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 %files -n %{name}-devel
 %defattr(-,root,root)
@@ -107,5 +107,3 @@ mv %{buildroot}%{_mandir}/man3/buffer.3 \
 %{_libdir}/dietlibc/lib/libowfat.a
 %{_libdir}/dietlibc/include/*.h
 %{_mandir}/man3/*
-
-
