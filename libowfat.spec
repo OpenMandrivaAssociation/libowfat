@@ -1,6 +1,6 @@
 %define name libowfat
 %define version 0.28
-%define release %mkrel 6
+%define release %mkrel 7
 %define libname %mklibname owfat 0
 
 Summary:	Reimplement libdjb under GPL
@@ -75,6 +75,8 @@ make -f GNUmakefile \
 	MAN3DIR=%{buildroot}%{_mandir}/man3 \
 	LIBDIR=%{buildroot}%{_libdir} \
     install
+ln -s libowfat.so.%{version} %{buildroot}%{_libdir}/libowfat.so.0 
+ln -s libowfat.so.%{version} %{buildroot}%{_libdir}/libowfat.so
 
 # fix conflicting file (from openssl-devel)
 mv %{buildroot}%{_mandir}/man3/buffer.3 \
@@ -86,9 +88,11 @@ rm -rf %{buildroot}
 %files -n %{libname}
 %doc CHANGES README
 %defattr(-,root,root)
+%{_libdir}/libowfat.so.0
 %{_libdir}/libowfat.so.0.28
 
 %files -n %{name}-devel
 %defattr(-,root,root)
+%{_libdir}/libowfat.so
 %{_includedir}/*.h
 %{_mandir}/man3/*
