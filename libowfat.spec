@@ -1,7 +1,7 @@
 Summary:	Reimplement libdjb under GPL
 Name:		libowfat
 Version:	0.28
-Release:	%mkrel 4
+Release:	%mkrel 5
 License:	GPLv2+
 Group:		Development/C
 URL:		http://www.fefe.de/libowfat/
@@ -86,6 +86,7 @@ rm -rf %{buildroot}
 make -f GNUmakefile \
 	prefix=%{buildroot}%{_prefix} \
 	MAN3DIR=%{buildroot}%{_mandir}/man3 \
+	LIBDIR=%{buildroot}%{_libdir} \
     install
 
 # fix conflicting file (from openssl-devel)
