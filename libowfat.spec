@@ -1,6 +1,6 @@
 %define name libowfat
 %define version 0.28
-%define release %mkrel 7
+%define release %mkrel 8
 %define libname %mklibname owfat 0
 
 Summary:	Reimplement libdjb under GPL
