@@ -76,6 +76,7 @@ make -f GNUmakefile \
 	DIET='' \
 	prefix=%{buildroot}%{_prefix} \
 	MAN3DIR=%{buildroot}%{_mandir}/man3 \
+    LIBDIR=%{buildroot}%{_libdir} \
     install
 
 make -f GNUmakefile clean
