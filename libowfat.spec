@@ -1,19 +1,20 @@
 %define name libowfat
 %define version 0.28
-%define release %mkrel 8
+%define release %mkrel 9
 %define libname %mklibname owfat 0
 
-Summary:	Reimplement libdjb under GPL
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
-License:	GPLv2+
-Group:		Development/C
-URL:		http://www.fefe.de/libowfat/
-Source0:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2
-Source1:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2.sig
-Patch0:		libowfat-0.28-shared.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Summary:		Reimplement libdjb under GPL
+Name:			%{name}
+Version:		%{version}
+Release:		%{release}
+License:		GPLv2+
+Group:			Development/C
+URL:			http://www.fefe.de/libowfat/
+Source0:		http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2
+Source1:		http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2.sig
+Patch0:			libowfat-0.28-shared.patch
+BuildRequires:	dietlibc-devel >= 0.32
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 libowfat is a library of general purpose APIs extracted from Dan
@@ -65,16 +66,34 @@ libowfat library.
 %patch0 -p1 -b .shared
 
 %build
-make -f GNUmakefile
+make -f GNUmakefile \
+	DIET=''
 
 %install
 rm -rf %{buildroot}
 
 make -f GNUmakefile \
+	DIET='' \
 	prefix=%{buildroot}%{_prefix} \
 	MAN3DIR=%{buildroot}%{_mandir}/man3 \
-	LIBDIR=%{buildroot}%{_libdir} \
     install
+
+make -f GNUmakefile clean
+rm -f Makefile
+mv -f GNUmakefile.shared GNUmakefile
+
+make -f GNUmakefile \
+    prefix="%{_libdir}/dietlibc" \
+    DIET="%{_bindir}/diet -Os"
+
+install -d %{buildroot}%{_libdir}/dietlibc
+make -f GNUmakefile \
+    prefix="%{buildroot}%{_libdir}/dietlibc" \
+    LIBDIR="%{buildroot}%{_libdir}/dietlibc/lib" \
+    DIET="%{_bindir}/diet -Os" \
+    MAN3DIR="%{buildroot}%{_mandir}/man3" \
+    install
+
 ln -s libowfat.so.%{version} %{buildroot}%{_libdir}/libowfat.so.0 
 ln -s libowfat.so.%{version} %{buildroot}%{_libdir}/libowfat.so
 
@@ -95,4 +114,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/libowfat.so
 %{_includedir}/*.h
+%{_libdir}/dietlibc/lib/libowfat.a
+%{_libdir}/dietlibc/include/*.h
 %{_mandir}/man3/*
