@@ -1,0 +1,77 @@
+diff -urNp libowfat-0.28/GNUmakefile.shared libowfat-0.28/GNUmakefile
+--- libowfat-0.28/GNUmakefile.shared	2006-07-16 01:17:01.000000000 +0200
++++ libowfat-0.28/GNUmakefile	2009-08-29 22:40:07.250637731 +0200
+@@ -13,12 +13,12 @@ LIBS=byte.a fmt.a scan.a str.a uint.a op
+ buffer.a mmap.a taia.a tai.a dns.a case.a mult.a array.a io.a \
+ textcode.a cdb.a
+ 
+-all: t $(LIBS) libowfat.a libsocket
++all: t $(LIBS) libowfat.so libsocket
+ 
+ CROSS=
+ #CROSS=i686-mingw-
+ CC=$(CROSS)gcc
+-CFLAGS=-pipe -W -Wall -O2 -fomit-frame-pointer
++CFLAGS=-pipe -W -Wall -O2 -fomit-frame-pointer -fPIC
+ #CFLAGS=-pipe -Os -march=pentiumpro -mcpu=pentiumpro -fomit-frame-pointer -fschedule-insns2 -Wall
+ 
+ # CFLAGS += -fstrict-aliasing -Wstrict-aliasing=2
+@@ -131,9 +131,8 @@ $(SOCKET_OBJS) $(BUFFER_OBJS) $(MMAP_OBJ
+ $(TAIA_OBJS) $(TAI_OBJS) $(CASE_OBJS) $(ARRAY_OBJS) $(MULT_OBJS) \
+ $(IO_OBJS) $(CDB_OBJS)
+ 
+-libowfat.a: $(ALL_OBJS)
+-	$(CROSS)ar cr $@ $(ALL_OBJS)
+-	-$(CROSS)ranlib $@
++libowfat.so: $(ALL_OBJS)
++	$(CROSS)gcc -shared -Wl,-soname,libowfat.so.$(MAJOR) -o $@.$(VERSION) $(ALL_OBJS)
+ 
+ CFLAGS+=-I.
+ 
+@@ -146,8 +145,8 @@ CFLAGS+=-I.
+ 
+ t.o: iopause.h
+ 
+-t: t.o libowfat.a libsocket
+-	$(DIET) $(CC) -g -o $@ t.o libowfat.a `cat libsocket`
++t: t.o libowfat.so libsocket
++	$(DIET) $(CC) -g -o $@ t.o libowfat.so.$(VERSION) `cat libsocket`
+ 
+ .PHONY: all clean tar install rename
+ clean:
+@@ -160,27 +159,27 @@ INCLUDES=buffer.h byte.h fmt.h ip4.h ip6
+ uint16.h uint32.h uint64.h open.h textcode.h tai.h taia.h dns.h iopause.h case.h \
+ openreadclose.h readclose.h ndelay.h array.h io.h safemult.h iob.h havealloca.h \
+ errmsg.h cdb.h cdb_make.h rangecheck.h
++VERSION=$(shell head -n 1 CHANGES|sed 's/://')
++MAJOR=$(shell echo $(VERSION)|sed 's/\..*//')
++CURNAME=$(notdir $(shell pwd))
+ 
+-install: libowfat.a
++install: libowfat.so
+ 	install -d $(INCLUDEDIR) $(MAN3DIR) $(LIBDIR)
+ 	install -m 644 $(INCLUDES) $(INCLUDEDIR)
+ 	install -m 644 $(wildcard */*.3) $(MAN3DIR)
+-	install -m 644 libowfat.a $(LIBDIR)
++	install -m 644 libowfat.so.$(VERSION) $(LIBDIR)
+ 
+ uninstall:
+ 	rm -f $(patsubst %.h,$(INCLUDEDIR)/%.h,$(INCLUDES))
+ 	rm -f $(patsubst %.3,$(MAN3DIR)/%.3,$(notdir $(wildcard */*.3)))
+-	rm -f $(LIBDIR)/libowfat.a
+-
+-VERSION=libowfat-$(shell head -n 1 CHANGES|sed 's/://')
+-CURNAME=$(notdir $(shell pwd))
++	rm -f $(LIBDIR)/libowfat.so.$(VERSION)
+ 
+ tar: Makefile clean rename
+ 	rm -f dep libdep
+-	cd ..; tar cvvf $(VERSION).tar.bz2 --use=bzip2 --exclude CVS $(VERSION)
++	cd ..; tar cvvf libowfat-$(VERSION).tar.bz2 --use=bzip2 --exclude CVS libowfat-$(VERSION)
+ 
+ rename:
+-	if test $(CURNAME) != $(VERSION); then cd .. && mv $(CURNAME) $(VERSION); fi
++	if test $(CURNAME) != libowfat-$(VERSION); then cd .. && mv $(CURNAME) libowfat-$(VERSION); fi
+ 
+ haveip6.h: tryip6.c
+ 	-rm -f $@
