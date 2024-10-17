@@ -8,7 +8,7 @@ Version:	0.29
 Release:	2
 License:	GPLv2+
 Group:		Development/C
-Url:		http://www.fefe.de/libowfat/
+Url:		https://www.fefe.de/libowfat/
 Source0:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		libowfat-0.29-shared.patch
 BuildRequires:	dietlibc-devel >= 0.32
