@@ -11,6 +11,7 @@ Group:		Development/C
 Url:		https://www.fefe.de/libowfat/
 Source0:	http://www.fefe.de/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		libowfat-0.29-shared.patch
+BuildRequires:	make
 BuildRequires:	dietlibc-devel >= 0.32
 
 %description
